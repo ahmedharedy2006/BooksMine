@@ -1,3 +1,5 @@
+using BooksMine.DataAccess.Repository;
+using BooksMine.DataAccess.Repository.interfaces;
 using BooksMineWeb.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,7 +10,13 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<AppDbContext>(options =>
  options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectionString")));
 
-
+builder.Services.AddScoped<ICategoryRepo , CategoryRepo>();
+builder.Services.AddScoped<IBookRepo, BookRepo>();
+builder.Services.AddScoped<IPublisherRepo, PublisherRepo>();
+builder.Services.AddScoped<IAuthorRepo, AuthorRepo>();
+builder.Services.AddScoped<ICityRepo, CityRepo>();
+builder.Services.AddScoped<ICountryRepo, CountryRepo>();
+builder.Services.AddScoped<IUnitOfWork , UnitOfWork>();
 
 
 
