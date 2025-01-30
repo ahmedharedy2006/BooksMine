@@ -1,5 +1,6 @@
 using BooksMine.DataAccess.Repository;
 using BooksMine.DataAccess.Repository.interfaces;
+using BooksMine.Models.Models;
 using BooksMineWeb.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -11,7 +12,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<AppDbContext>(options =>
  options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectionString")));
 
-builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+builder.Services.AddIdentity<AppUser, IdentityRole>()
     .AddEntityFrameworkStores<AppDbContext>(); 
 
 builder.Services.AddScoped<ICategoryRepo , CategoryRepo>();
