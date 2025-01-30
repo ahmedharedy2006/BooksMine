@@ -1,0 +1,116 @@
+﻿@model Book
+
+
+<form method="post" enctype="multipart/form-data">
+    @if (ViewBag.Id != 0)
+    {
+        <input asp-for="Id" hidden />
+    }
+    <div class="border p-3 mt-4">
+        <div class="row pb-2">
+            <h2 class="text-primary">
+                @(ViewBag.Id == 0 ? "Create" : "Update") Book
+            </h2>
+        </div>
+
+
+        <div class="mb-3 p-1 row">
+            <label class="p-0">Name</label>
+            <input asp-for="title" placeholder="Enter The Category Name" class="form-control border-2" />
+            <span asp-validation-for="title" class="text-danger"></span>
+        </div>
+        <div class="mb-3 p-1 row">
+            <label class="p-0">Description</label>
+            <textarea asp-for="description" id="text"></textarea>
+        </div>
+
+        <div class="mb-3 p-1 row">
+            <label class="p-0">Price</label>
+            <input type="number" asp-for="price" placeholder="Enter The Category Description" class="form-control border-2" />
+            <span asp-validation-for="price" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3 p-1 row">
+            <label class="p-0">No In Stock</label>
+            <input type="number" asp-for="noInStock" placeholder="Enter The Category Description" class="form-control border-2" />
+            <span asp-validation-for="noInStock" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3 p-1 row">
+            <label class="p-0">Edition</label>
+            <input asp-for="edition" placeholder="Enter The Edition" class="form-control border-2" />
+            <span asp-validation-for="edition" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3 p-1 row">
+            <label class="p-0">Category</label>
+            <select asp-for="catId" class="form-control border-2 " asp-items="ViewBag.CategoryList">
+                <option disabled selected>--Select Category--</option>
+            </select>
+            <span asp-validation-for="catId" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3 p-1 row">
+            <label class="p-0">Author</label>
+            <select asp-for="authId" class="form-control border-2 " asp-items="ViewBag.AuthorList">
+                <option disabled selected>--Select Author--</option>
+            </select>
+            <span asp-validation-for="authId" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3 p-1 row">
+            <label class="p-0">Publisher</label>
+            <select asp-for="pubId" class="form-control border-2 " asp-items="ViewBag.publisherList">
+                <option disabled selected>--Select Publsiher--</option>
+            </select>
+            <span asp-validation-for="pubId" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3 p-1 row">
+            <div class="col-6">
+                <label class="p-0">Book Image</label>
+                <input type="file" name="file" class="form-control" />
+            </div>
+            <div class="col-6">
+
+                @if (ViewBag.Id != 0)
+                {
+                    <input asp-for="imgUrl" hidden />
+
+                    <img src="@Model.imgUrl" />
+                }
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-6">
+                <button type="submit" class="btn btn-primary form-control">Add</button>
+            </div>
+            <div class="col-6">
+                <a asp-controller="Book" asp-action="Index" class="btn btn-secondary form-control">Back To List</a>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+
+
+
+@section Scripts {
+    <script>
+        tinymce.init({
+            selector: 'textarea',  // change this value according to your HTML
+            plugins: 'a11ychecker advcode casechange formatpainter linkchecker autolink lists checklist media mediaembed pageembed permanentpen powerpaste table advtable tinycomments tinymcespellchecker',
+            toolbar: 'a11ycheck addcomment showcomments casechange checklist code formatpainter pageembed permanentpen table',
+            toolbar_mode: 'floating',
+            tinycomments_mode: 'embedded',
+            tinycomments_author: 'Author name',
+        });
+    </script>
+
+    @{
+
+        <partial name="_ValidationScriptsPartial" />
+    }
+}
