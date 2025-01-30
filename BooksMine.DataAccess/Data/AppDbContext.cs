@@ -1,4 +1,5 @@
 ﻿using BooksMine.Models;
+using BooksMine.Models.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,6 +11,8 @@ namespace BooksMineWeb.Data
         {
 
         }
+
+        public DbSet<AppUser> appUsers { get; set; }
 
         public DbSet<Category> Categories { get; set; }
 
