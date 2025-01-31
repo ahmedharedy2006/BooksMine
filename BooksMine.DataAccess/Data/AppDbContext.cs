@@ -26,6 +26,8 @@ namespace BooksMineWeb.Data
 
         public DbSet<Country> countries { get; set; }
 
+        public DbSet<ShoppingCart> shoppingCarts { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
