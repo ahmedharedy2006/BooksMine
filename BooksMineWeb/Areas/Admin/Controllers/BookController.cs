@@ -41,6 +41,8 @@ namespace BooksMineWeb.Areas.Admin.Controllers
                 Price = book.price,
                 CategoryName = book.category.name,
                 NoInStock = book.noInStock,
+                imgUrl = book.imgUrl
+
             }).ToList();
             return View(booksView);
         }

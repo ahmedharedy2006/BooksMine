@@ -22,5 +22,7 @@ namespace BooksMine.Models.ViewModels
         public string AuthorName { get; set; }
 
         public string CategoryName { get; set; }
+
+        public string imgUrl { get; set; }
     }
 }
