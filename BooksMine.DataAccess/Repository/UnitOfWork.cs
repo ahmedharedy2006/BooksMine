@@ -15,6 +15,8 @@ namespace BooksMine.DataAccess.Repository
 
         public IBookRepo bookRepo { get; private set; }
 
+        public IShoppingCartRepo shoppingCartRepo { get; private set; }
+
         public IPublisherRepo publisherRepo { get; private set; }
 
         public IAuthorRepo authorRepo { get; private set; }
