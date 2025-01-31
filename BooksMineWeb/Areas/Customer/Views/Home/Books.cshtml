@@ -10,7 +10,7 @@
                     <h5 class="card-title">@obj.Title</h5>
                     <h4>@obj.Price</h4>
                     <h6>@obj.AuthorName</h6>
-                    <a href="#" class="btn btn-primary">See Details</a>
+                    <a asp-action="BookDetails" asp-route-id="@obj.Id" class="btn btn-primary">See Details</a>
                 </div>
             </div>
              </div>
