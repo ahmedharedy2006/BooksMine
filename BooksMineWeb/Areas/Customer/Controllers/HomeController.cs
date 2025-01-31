@@ -1,5 +1,6 @@
 using BooksMine.DataAccess.Repository.interfaces;
 using BooksMine.Models;
+using BooksMine.Models.Models;
 using BooksMine.Models.ViewModels;
 using BooksMineWeb.Data;
 using Microsoft.AspNetCore.Mvc;
@@ -58,6 +59,42 @@ namespace BooksMineWeb.Areas.Customer.Controllers
             }).ToList();
 
             return View(booksView);
+        }
+
+        public async Task<IActionResult> BookDetails(int id)
+        {
+            var book = await _unitOfWork.bookRepo.GetAsync(
+                b => b.Id == id,
+                false,
+                new Expression<Func<Book, object>>[] { b => b.publisher,
+                b => b.author,
+                b => b.category
+                }
+                );
+
+            BooksViewModel bookView = new ()
+            {
+                Id = book.Id,
+                Title = book.title,
+                Description = book.description,
+                AuthorName = book.author.firstName + book.author.lastName,
+                PublisherName = book.publisher.name,
+                Price = book.price,
+                CategoryName = book.category.name,
+                NoInStock = book.noInStock,
+                imgUrl = book.imgUrl
+
+            };
+
+            ShoppingCart cart = new()
+            {
+                booksViewModel = bookView,
+                bookId = book.Id,
+                Count = 1
+            };
+            
+
+            return View(cart);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
