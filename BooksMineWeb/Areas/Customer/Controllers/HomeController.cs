@@ -3,9 +3,11 @@ using BooksMine.Models;
 using BooksMine.Models.Models;
 using BooksMine.Models.ViewModels;
 using BooksMineWeb.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Linq.Expressions;
+using System.Security.Claims;
 
 namespace BooksMineWeb.Areas.Customer.Controllers
 {
@@ -96,6 +98,22 @@ namespace BooksMineWeb.Areas.Customer.Controllers
 
             return View(cart);
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize]
+        public async Task<IActionResult> BookDetails(ShoppingCart cart)
+        {
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+            cart.AppUserId = userId;
+
+            await _unitOfWork.shoppingCartRepo.Add(cart);
+            await _unitOfWork.saveAsync();
+
+            return RedirectToAction(nameof(Books));
+        }
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
