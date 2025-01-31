@@ -14,6 +14,7 @@
         <h6>@Model.booksViewModel.CategoryName</h6>
         <h6>@Model.booksViewModel.NoInStock</h6>
         <form method="post">
+            <input hidden asp-for="bookId" />
             <input value="0" asp-for="@Model.Count" class="form-control border-2 border-black" type="number" max="@Model.booksViewModel.NoInStock" min="0"/>
             <br />
             <button type="submit" class="btn btn-success">Add To Cart</button>
