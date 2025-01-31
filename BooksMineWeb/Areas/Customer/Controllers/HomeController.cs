@@ -108,7 +108,7 @@ namespace BooksMineWeb.Areas.Customer.Controllers
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
             cart.AppUserId = userId;
 
-            await _unitOfWork.shoppingCartRepo.Add(cart);
+             await _unitOfWork.shoppingCartRepo.CreateAsync(cart);
             await _unitOfWork.saveAsync();
 
             return RedirectToAction(nameof(Books));
