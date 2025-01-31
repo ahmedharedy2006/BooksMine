@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BooksMine.Models.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -23,5 +24,8 @@ namespace BooksMine.Models.Models
         public Book book { get; set; }
         [Range(1, 1000 , ErrorMessage ="Please Enter A Value Between 1 And 1000")]
         public int Count { get; set; }
+
+        [NotMapped]
+        public BooksViewModel booksViewModel { get; set; }
     }
 }
