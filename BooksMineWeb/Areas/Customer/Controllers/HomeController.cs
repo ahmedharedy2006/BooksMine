@@ -1,6 +1,10 @@
+using BooksMine.DataAccess.Repository.interfaces;
 using BooksMine.Models;
+using BooksMine.Models.ViewModels;
+using BooksMineWeb.Data;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Linq.Expressions;
 
 namespace BooksMineWeb.Areas.Customer.Controllers
 {
@@ -9,10 +13,14 @@ namespace BooksMineWeb.Areas.Customer.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly AppDbContext _db;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger , AppDbContext db , IUnitOfWork unitOfWork)
         {
             _logger = logger;
+            _unitOfWork = unitOfWork;
+            _db = db;
         }
 
         public IActionResult Index()
@@ -23,6 +31,31 @@ namespace BooksMineWeb.Areas.Customer.Controllers
         public IActionResult Privacy()
         {
             return View();
+        }
+
+        public async Task<IActionResult> Books()
+        {
+            var books = await _unitOfWork.bookRepo.GetAllAsync(
+                null,
+               new Expression<Func<Book, object>>[] { b => b.publisher ,
+               b => b.author,
+               b => b.category
+               }
+                );
+
+            var booksView = books.Select(book => new BooksViewModel
+            {
+                Id = book.Id,
+                Title = book.title,
+                Description = book.description,
+                AuthorName = book.author.firstName + book.author.lastName,
+                PublisherName = book.publisher.name,
+                Price = book.price,
+                CategoryName = book.category.name,
+                NoInStock = book.noInStock,
+            }).ToList();
+
+            return View(booksView);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
