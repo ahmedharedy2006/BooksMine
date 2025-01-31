@@ -107,16 +107,34 @@ namespace BooksMineWeb.Areas.Customer.Controllers
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-            ShoppingCart newCart = new()
+
+            ShoppingCart cartFromDb = await _unitOfWork.shoppingCartRepo.GetAsync(
+                u => u.AppUserId == userId && u.bookId == cart.bookId,
+                false
+                );
+
+            if (cartFromDb != null)
             {
-                AppUserId = userId,
-                bookId = cart.Id,
-                Count = cart.Count
+                var newCount = cartFromDb.Count + cart.Count;
+                cartFromDb.Count = newCount;
+                _unitOfWork.shoppingCartRepo.UpdateAsync(cartFromDb);
+                await _unitOfWork.saveAsync();
 
-            };
+            }
 
-             await _unitOfWork.shoppingCartRepo.CreateAsync(newCart);
-            await _unitOfWork.saveAsync();
+            else
+            {
+                ShoppingCart newCart = new()
+                {
+                    AppUserId = userId,
+                    bookId = cart.Id,
+                    Count = cart.Count
+
+                };
+
+                await _unitOfWork.shoppingCartRepo.CreateAsync(newCart);
+
+            }
 
             return RedirectToAction(nameof(Books));
         }
