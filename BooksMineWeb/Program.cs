@@ -17,6 +17,7 @@ builder.Services.AddIdentity<AppUser, IdentityRole>()
 
 builder.Services.AddScoped<ICategoryRepo , CategoryRepo>();
 builder.Services.AddScoped<IBookRepo, BookRepo>();
+builder.Services.AddScoped<IShoppingCartRepo, ShoppingCartRepo>();
 builder.Services.AddScoped<IPublisherRepo, PublisherRepo>();
 builder.Services.AddScoped<IAuthorRepo, AuthorRepo>();
 builder.Services.AddScoped<ICityRepo, CityRepo>();

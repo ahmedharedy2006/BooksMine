@@ -33,6 +33,7 @@ namespace BooksMine.DataAccess.Repository
             authorRepo = new AuthorRepo(db);
             cityRepo = new CityRepo(db);
             countryRepo = new CountryRepo(db);
+            shoppingCartRepo = new ShoppingCartRepo(db);
         }
 
         public async Task saveAsync()
