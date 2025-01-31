@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace BooksMineWeb.Areas.Customer.Controllers
 {
+    [Area("Customer")]
+
     public class AccountController : Controller
     {
         private readonly UserManager<AppUser> _userManager;
@@ -21,6 +23,7 @@ namespace BooksMineWeb.Areas.Customer.Controllers
             _userManager = userManager;
             _roleManager = roleManager;
         }
+
         [AllowAnonymous]
         public async Task<IActionResult> Register(string returnurl = null)
         {
