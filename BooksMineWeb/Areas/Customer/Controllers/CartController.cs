@@ -28,7 +28,9 @@ namespace BooksMineWeb.Areas.Customer.Controllers
                 ListCart = _unitOfWork.shoppingCartRepo.GetAllAsync(
                     s => s.AppUserId == userId,
                     new Expression<Func<ShoppingCart, object>>[] { s => s.book }
-                    ).Result.ToList()
+                    ).Result.ToList(),
+
+                OrderHeader = new()
             };
 
             foreach(var item in cart.ListCart)
