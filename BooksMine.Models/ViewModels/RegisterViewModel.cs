@@ -29,5 +29,15 @@ namespace BooksMine.Models.ViewModels
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+
+        public string streetAddress { get; set; }
+
+        public string city { get; set; }
+
+        public string postalCode { get; set; }
+
+        public string state { get; set; }
+
+        public string PhoneNumber { get; set; }
     }
 }

@@ -54,6 +54,11 @@ namespace BooksMineWeb.Areas.Customer.Controllers
                     Email = model.Email,
                     FirstName = model.FirstName,
                     LastName = model.LastName,
+                    streetAddress = model.streetAddress,
+                    city = model.city,
+                    state = model.state,
+                    postalCode = model.postalCode,
+                    PhoneNumber = model.PhoneNumber
                 };
 
                 var result = await _userManager.CreateAsync(user, model.Password);
