@@ -21,8 +21,6 @@ namespace BooksMine.Models.Models
 
         public DateTime ShippingDate { get; set; }
 
-        public string? OrderStatus { get; set; }
-
         public string? paymentStatus { get; set; }
 
         public string? orderStatus { get;  set; }
