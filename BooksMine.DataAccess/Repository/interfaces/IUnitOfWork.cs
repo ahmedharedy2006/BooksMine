@@ -21,6 +21,10 @@ namespace BooksMine.DataAccess.Repository.interfaces
         ICountryRepo countryRepo { get; }
 
         IShoppingCartRepo shoppingCartRepo { get; }
+
+        IOrderDetailsRepo orderDetailsRepo { get; }
+
+        IOrderHeaderRepo orderHeaderRepo { get; }
         Task saveAsync();
         
     }
