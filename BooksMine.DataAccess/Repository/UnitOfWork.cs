@@ -28,6 +28,8 @@ namespace BooksMine.DataAccess.Repository
         public IOrderHeaderRepo orderHeaderRepo { get; private set; }
 
         public IOrderDetailsRepo orderDetailsRepo { get; private set; }
+
+        public IAppUserRepo appUserRepo { get; private set; }
         public UnitOfWork(AppDbContext db)
         {
             _db = db;
@@ -40,6 +42,7 @@ namespace BooksMine.DataAccess.Repository
             shoppingCartRepo = new ShoppingCartRepo(db);
             orderHeaderRepo = new OrderHeaderRepo(db);
             orderDetailsRepo = new OrderDetailsRepo(db);
+            appUserRepo = new AppUserRepo(db);
         }
 
         public async Task saveAsync()

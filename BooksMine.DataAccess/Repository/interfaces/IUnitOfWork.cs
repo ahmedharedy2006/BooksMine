@@ -25,6 +25,8 @@ namespace BooksMine.DataAccess.Repository.interfaces
         IOrderDetailsRepo orderDetailsRepo { get; }
 
         IOrderHeaderRepo orderHeaderRepo { get; }
+
+        IAppUserRepo appUserRepo { get; }
         Task saveAsync();
         
     }
