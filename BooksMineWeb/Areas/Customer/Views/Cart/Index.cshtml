@@ -1,2 +1,38 @@
-﻿<h2>Your Cart</h2>
+﻿@model ShoppingCartViewModel
+
+<h2>Your Cart</h2>
 <hr />
+<table class="table table-striped">
+    <thead class="table-success">
+        <tr>
+            <th>Id</th>
+            <th>Book Name</th>
+            <th>Book Price</th>
+            <th>Book Quantity</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            var i = 1;
+
+        }
+        @foreach (var item in Model.ListCart)
+        {
+            <tr>
+                <td>@i</td>
+                <td>@item.book.title</td>
+                <td>@item.book.price</td>
+                <td>@item.Count</td>
+                <td>
+                    <a class="btn btn-info btn-sm">+</a>
+                    <a class="btn btn-warning btn-sm">-</a>
+                    <a class="btn btn-danger btn-sm">x</a>
+                </td>
+            </tr>
+
+            i++;
+        }
+    </tbody>
+</table>
+<h3>Total Price : @Model.totalOrder</h3>
