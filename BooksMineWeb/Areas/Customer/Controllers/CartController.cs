@@ -33,7 +33,7 @@ namespace BooksMineWeb.Areas.Customer.Controllers
 
             foreach(var item in cart.ListCart)
             {
-                cart.totalOrder += (item.Count * item.book.price);
+                cart.OrderHeader.orderTotal += (item.Count * item.book.price);
             }
             
             return View(cart);
