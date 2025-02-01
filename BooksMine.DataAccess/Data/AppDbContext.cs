@@ -28,6 +28,10 @@ namespace BooksMineWeb.Data
 
         public DbSet<ShoppingCart> shoppingCarts { get; set; }
 
+        public DbSet<OrderDetails> orderDetails { get; set; }
+
+        public DbSet<OrderHeader> orderHeaders { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
