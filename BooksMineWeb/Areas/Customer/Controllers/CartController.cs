@@ -38,5 +38,24 @@ namespace BooksMineWeb.Areas.Customer.Controllers
             
             return View(cart);
         }
+
+        public async Task<IActionResult> summary(ShoppingCartViewModel cart)
+        {
+            cart.OrderHeader.AppUser = await _unitOfWork.appUserRepo.GetAsync(u => u.Id == cart.OrderHeader.AppUserId);
+
+            cart.OrderHeader.Name = cart.OrderHeader.AppUser.FirstName + cart.OrderHeader.AppUser.LastName;
+
+            cart.OrderHeader.phoneNumber = cart.OrderHeader.AppUser.PhoneNumber;
+
+            cart.OrderHeader.state = cart.OrderHeader.AppUser.state;
+
+            cart.OrderHeader.city = cart.OrderHeader.AppUser.city;
+
+            cart.OrderHeader.streetAddress = cart.OrderHeader.AppUser.streetAddress;
+
+            cart.OrderHeader.postalCode = cart.OrderHeader.AppUser.postalCode;
+
+            return View(cart);
+        }
     }
 }
