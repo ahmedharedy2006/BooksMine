@@ -1,9 +1,11 @@
 using BooksMine.DataAccess.Repository;
 using BooksMine.DataAccess.Repository.interfaces;
 using BooksMine.Models.Models;
+using BooksMine.Utility;
 using BooksMineWeb.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Stripe;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,7 +26,7 @@ builder.Services.AddScoped<ICityRepo, CityRepo>();
 builder.Services.AddScoped<ICountryRepo, CountryRepo>();
 builder.Services.AddScoped<IUnitOfWork , UnitOfWork>();
 
-
+builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("stripe"));
 
 var app = builder.Build();
 
@@ -38,7 +40,7 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
+StripeConfiguration.ApiKey = builder.Configuration.GetSection("stripe:SecretKey").Get<String>();
 app.UseRouting();
 
 app.UseAuthentication();
