@@ -71,6 +71,11 @@ namespace BooksMineWeb.Areas.Customer.Controllers
 
             cart.OrderHeader.postalCode = cart.OrderHeader.AppUser.postalCode;
 
+            foreach (var item in cart.ListCart)
+            {
+                cart.OrderHeader.orderTotal += (item.Count * item.book.price);
+            }
+
             return View(cart);
         }
     }
