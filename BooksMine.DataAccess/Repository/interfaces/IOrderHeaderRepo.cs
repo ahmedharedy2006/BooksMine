@@ -12,5 +12,9 @@ namespace BooksMine.DataAccess.Repository.interfaces
     {
         Task UpdateAsync(OrderHeader orderHeader);
 
+        void UpdateStatus(int id, string Orderstatus, string? paymentStatus = null);
+
+        void UpdateStripePaymentIntentId(int id, string paymentIntentId , string sessionId);
+
     }
 }
