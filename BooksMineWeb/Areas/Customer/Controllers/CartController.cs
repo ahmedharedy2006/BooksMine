@@ -144,7 +144,7 @@ namespace BooksMineWeb.Areas.Customer.Controllers
 
                 var service = new SessionService();
                 Session session = service.Create(options);
-                _unitOfWork.orderHeaderRepo.UpdateStripePaymentIntentId(cart.OrderHeader.Id,  session.PaymentIntentId , session.Id);
+                _unitOfWork.orderHeaderRepo.UpdateStripePaymentIntentId(cart.OrderHeader.Id, session.PaymentIntentId, session.Id);
                 _unitOfWork.saveAsync();
                 Response.Headers.Add("Location", session.Url);
                 return new StatusCodeResult(303);
@@ -152,6 +152,27 @@ namespace BooksMineWeb.Areas.Customer.Controllers
             }
             return RedirectToAction("Index");
 
+        }
+
+        public async Task<IActionResult> OrderConfirm(int id)
+        {
+            OrderHeader orderHeader = await _unitOfWork.orderHeaderRepo.GetAsync(o => o.Id == id);
+
+            var service = new SessionService();
+            Session session = service.Get(orderHeader.sessionId);
+
+            if (session.PaymentStatus.ToLower() == "paid")
+            {
+                _unitOfWork.orderHeaderRepo.UpdateStripePaymentIntentId(id, session.Id, session.PaymentIntentId);
+                _unitOfWork.orderHeaderRepo.UpdateStatus(orderHeader.Id, SD.StatusApproved, SD.PaymentStatusApproved);
+                _unitOfWork.saveAsync();
+            }
+
+            List<ShoppingCart> shoppingCart = _unitOfWork.shoppingCartRepo.GetAllAsync(s => s.AppUserId == orderHeader.AppUserId).Result.ToList();
+            await _unitOfWork.shoppingCartRepo.RemoveRangeAsync(shoppingCart);
+            await _unitOfWork.saveAsync();
+
+            return View();
         }
     }
 }
