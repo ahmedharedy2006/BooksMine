@@ -41,9 +41,23 @@ namespace BooksMineWeb.Areas.Customer.Controllers
             return View(cart);
         }
 
-        public async Task<IActionResult> summary(ShoppingCartViewModel cart)
+        public async Task<IActionResult> summary()
         {
-            cart.OrderHeader.AppUser = await _unitOfWork.appUserRepo.GetAsync(u => u.Id == cart.OrderHeader.AppUserId);
+
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            ShoppingCartViewModel cart = new()
+            {
+                ListCart = _unitOfWork.shoppingCartRepo.GetAllAsync(
+                    s => s.AppUserId == userId,
+                    new Expression<Func<ShoppingCart, object>>[] { s => s.book }
+                    ).Result.ToList(),
+
+                OrderHeader = new()
+            };
+
+            cart.OrderHeader.AppUser = await _unitOfWork.appUserRepo.GetAsync(u => u.Id == userId);
 
             cart.OrderHeader.Name = cart.OrderHeader.AppUser.FirstName + cart.OrderHeader.AppUser.LastName;
 
