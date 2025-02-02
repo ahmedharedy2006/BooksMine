@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Linq.Expressions;
 using System.Security.Claims;
 using BooksMine.Models.Models;
+using BooksMine.Utility;
 
 namespace BooksMineWeb.Areas.Customer.Controllers
 {
@@ -20,8 +21,8 @@ namespace BooksMineWeb.Areas.Customer.Controllers
         }
         public async Task<IActionResult> Index()
         {
-           var claimsIdentity = (ClaimsIdentity)User.Identity;
-           var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
 
             ShoppingCartViewModel cart = new()
             {
@@ -33,11 +34,11 @@ namespace BooksMineWeb.Areas.Customer.Controllers
                 OrderHeader = new()
             };
 
-            foreach(var item in cart.ListCart)
+            foreach (var item in cart.ListCart)
             {
                 cart.OrderHeader.orderTotal += (item.Count * item.book.price);
             }
-            
+
             return View(cart);
         }
 
@@ -78,5 +79,45 @@ namespace BooksMineWeb.Areas.Customer.Controllers
 
             return View(cart);
         }
+
+        [HttpPost]
+
+        public async Task<IActionResult> summary(ShoppingCartViewModel cart)
+        {
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            cart.OrderHeader.ShippingDate = System.DateTime.Now;
+            cart.OrderHeader.AppUserId = userId;
+            cart.OrderHeader.orderStatus = SD.StatusPending;
+            cart.OrderHeader.paymentStatus = SD.PaymentStatusPending;
+            cart.ListCart = _unitOfWork.shoppingCartRepo.GetAllAsync(
+                    s => s.AppUserId == userId,
+                    new Expression<Func<ShoppingCart, object>>[] { s => s.book }
+                    ).Result.ToList();
+             foreach (var item in cart.ListCart)
+            {
+                cart.OrderHeader.orderTotal += (item.Count * item.book.price);
+            }
+
+            await _unitOfWork.orderHeaderRepo.CreateAsync(cart.OrderHeader);
+            await _unitOfWork.saveAsync();
+
+            foreach (var item in cart.ListCart)
+            {
+                OrderDetails orderDetails = new()
+                {
+                    bookId = item.book.Id,
+                    orderHeaderId = cart.OrderHeader.Id,
+                    count = item.Count,
+                    price = item.book.price
+                };
+
+                await _unitOfWork.orderDetailsRepo.CreateAsync(orderDetails);
+                await _unitOfWork.saveAsync();
+            }
+            return RedirectToAction("Index");
+        }
     }
 }
+    
