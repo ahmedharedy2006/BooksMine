@@ -7,6 +7,7 @@ using System.Linq.Expressions;
 using System.Security.Claims;
 using BooksMine.Models.Models;
 using BooksMine.Utility;
+using Stripe.Checkout;
 
 namespace BooksMineWeb.Areas.Customer.Controllers
 {
@@ -81,7 +82,6 @@ namespace BooksMineWeb.Areas.Customer.Controllers
         }
 
         [HttpPost]
-
         public async Task<IActionResult> summary(ShoppingCartViewModel cart)
         {
             var claimsIdentity = (ClaimsIdentity)User.Identity;
@@ -95,7 +95,7 @@ namespace BooksMineWeb.Areas.Customer.Controllers
                     s => s.AppUserId == userId,
                     new Expression<Func<ShoppingCart, object>>[] { s => s.book }
                     ).Result.ToList();
-             foreach (var item in cart.ListCart)
+            foreach (var item in cart.ListCart)
             {
                 cart.OrderHeader.orderTotal += (item.Count * item.book.price);
             }
@@ -115,8 +115,43 @@ namespace BooksMineWeb.Areas.Customer.Controllers
 
                 await _unitOfWork.orderDetailsRepo.CreateAsync(orderDetails);
                 await _unitOfWork.saveAsync();
+
+                var options = new Stripe.Checkout.SessionCreateOptions
+                {
+                    SuccessUrl = "https://localhost:7132/",
+                    CancelUrl = "https://localhost:7132/privacy",
+                    LineItems = new List<Stripe.Checkout.SessionLineItemOptions>(),
+                    Mode = "payment",
+                };
+
+                foreach (var cartItem in cart.ListCart)
+                {
+                    var sessionLineItem = new SessionLineItemOptions
+                    {
+                        PriceData = new SessionLineItemPriceDataOptions
+                        {
+                            UnitAmount = (long)cartItem.book.price * 100,
+                            Currency = "usd",
+                            ProductData = new SessionLineItemPriceDataProductDataOptions
+                            {
+                                Name = cartItem.book.title,
+                            }
+                        },
+                        Quantity = cartItem.Count
+                    };
+                    options.LineItems.Add(sessionLineItem);
+                }
+
+                var service = new SessionService();
+                Session session = service.Create(options);
+                _unitOfWork.orderHeaderRepo.UpdateStripePaymentIntentId(cart.OrderHeader.Id,  session.PaymentIntentId , session.Id);
+                _unitOfWork.saveAsync();
+                Response.Headers.Add("Location", session.Url);
+                return new StatusCodeResult(303);
+
             }
             return RedirectToAction("Index");
+
         }
     }
 }
