@@ -33,6 +33,8 @@ namespace BooksMine.Models.Models
 
         public DateOnly paymentDueDate { get; set; }
 
+        public string? sessionId { get; set; }
+
         public string? paymentIntentId { get; set; }
 
         [Required]
